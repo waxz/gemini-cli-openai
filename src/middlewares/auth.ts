@@ -49,7 +49,20 @@ export const openAIApiKeyAuth: MiddlewareHandler<{ Bindings: Env }> = async (c, 
 
 		const providedKey = match[1];
 		//console.log(`providedKe:${providedKey},  c.env.GEMINI_PROJECT_MAP: ${c.env.GEMINI_PROJECT_MAP}`)
-		const AUTH_MAP = JSON.parse(c.env.GEMINI_PROJECT_MAP || "{}"); 
+		// const AUTH_MAP = JSON.parse(c.env.GEMINI_PROJECT_MAP || "{}"); 
+		// GEMINI_PROJECT_MAP may excceds cloudflare secret limit
+		// read from KV storage
+		var AUTH_MAP = await c.env.GEMINI_CLI_KV.get("GEMINI_PROJECT_MAP","json");
+		if (! AUTH_MAP ){
+			AUTH_MAP = JSON.parse(c.env.GEMINI_PROJECT_MAP || "{}");
+			try {
+				await c.env.GEMINI_CLI_KV.put("GEMINI_PROJECT_MAP", JSON.stringify(AUTH_MAP));
+				console.log("Saved GEMINI_PROJECT_MAP to KV storage");
+			} catch (kvError) {	
+				console.log(`Failed to save GEMINI_PROJECT_MAP to KV storage: ${kvError}`);
+			
+			}
+		}
 		//console.log(`AUTH_MAP:${AUTH_MAP}`, AUTH_MAP);
 		if (providedKey == c.env.OPENAI_API_KEY){
 	        return next();

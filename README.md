@@ -19,6 +19,7 @@ Transform Google's Gemini models into OpenAI-compatible endpoints using Cloudfla
 - 🆓 **Free Tier Access** - Leverage Google's free tier through Code Assist API
 - 📡 **Real-time Streaming** - Server-sent events for live responses with token usage
 - 🎭 **Multiple Models** - Access to latest Gemini models including experimental ones
+- 🧑🏻‍🤝‍🧑🏻 **Multiple Google Profile** - Switch your Google profile based on OPENAI_API_KEY
 
 ## 🤖 Supported Models
 
@@ -161,7 +162,7 @@ npm run dev
 | `GCP_SERVICE_ACCOUNT` | ✅ | OAuth2 credentials JSON string. |
 | `GEMINI_PROJECT_ID` | ❌ | Google Cloud Project ID (auto-discovered if not set). |
 | `OPENAI_API_KEY` | ❌ | API key for authentication. If not set, the API is public. |
-| `GEMINI_PROJECT_MAP` | Mutiple OAuth2 Profile|
+| `GEMINI_PROJECT_MAP` | ❌ | Mutiple OAuth2 Profile|
 #### Thinking & Reasoning
 
 | Variable | Description |
