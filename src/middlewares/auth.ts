@@ -71,19 +71,18 @@ export const openAIApiKeyAuth: MiddlewareHandler<{ Bindings: Env }> = async (c, 
 		if (AUTH_MAP.hasOwnProperty(providedKey)){
 
 			const provider  = AUTH_MAP[providedKey];
+			if(provider.hasOwnProperty("GCP_SERVICE_ACCOUNT"))
+				c.env.GCP_SERVICE_ACCOUNT = JSON.stringify(provider["GCP_SERVICE_ACCOUNT"]);
+			if(provider.hasOwnProperty("GEMINI_PROJECT_ID"))
+				c.env.GEMINI_PROJECT_ID = provider["GEMINI_PROJECT_ID"] ;
+
 			if (providedKey !== c.env.OPENAI_API_KEY){
-				if(provider.hasOwnProperty("GCP_SERVICE_ACCOUNT"))
-					c.env.GCP_SERVICE_ACCOUNT = JSON.stringify(provider["GCP_SERVICE_ACCOUNT"]);
-				if(provider.hasOwnProperty("GEMINI_PROJECT_ID"))
-					c.env.GEMINI_PROJECT_ID = provider["GEMINI_PROJECT_ID"] ;
-
-						try {
-							await c.env.GEMINI_CLI_KV.delete(KV_TOKEN_KEY);
-							console.log("Cleared cached token from KV storage");
-						} catch (kvError) {
-							console.log("Error clearing KV cache:", kvError);
-						}
-
+				try {
+					await c.env.GEMINI_CLI_KV.delete(KV_TOKEN_KEY);
+					console.log("Cleared cached token from KV storage");
+				} catch (kvError) {
+					console.log("Error clearing KV cache:", kvError);
+				}
 			}
 
 			c.env.OPENAI_API_KEY = providedKey;
